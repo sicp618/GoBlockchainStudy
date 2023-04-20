@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -12,7 +11,7 @@ import (
 
 func main() {
 	host := "http://localhost:7545"
-	host = "ws://localhost:8545"
+	// host = "ws://localhost:8545"
 	// addr := "0xEf41Deb6F24d50887Ed8c15a24862A7d5029Cf66"
 	client, err := ethclient.Dial(host)
 	if err != nil {
@@ -21,7 +20,8 @@ func main() {
 	defer client.Close()
 
 	// readTxInfo(client)
-	listenNewTx(client)
+	// listenNewTx(client)
+	deployContracts(client)
 }
 
 func listenNewTx(client *ethclient.Client) {
@@ -75,8 +75,8 @@ func readTxInfo(client *ethclient.Client) {
 		fmt.Println("to", tx.To())
 		fmt.Println("data", tx.Data())
 
-		if msg, err := tx.AsMessage(types.NewEIP155Signer(tx.ChainId()), big.NewInt(0)); err == nil {
-			fmt.Println(msg.From().Hex()) // 0x0fD081e3Bb178dc45c0cb23202069ddA57064258
+		if address, err := types.Sender(types.NewEIP155Signer(tx.ChainId()), tx); err == nil {
+			fmt.Println(address.Hex()) // 0x0fD081e3Bb178dc45c0cb23202069ddA57064258
 		} else {
 			fmt.Println(err)
 		}
