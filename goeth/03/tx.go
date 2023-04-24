@@ -21,7 +21,7 @@ func main() {
 
 	// readTxInfo(client)
 	// listenNewTx(client)
-	deployContracts(client)
+	callContract(client)
 }
 
 func listenNewTx(client *ethclient.Client) {

@@ -9,11 +9,17 @@ import (
 
 	// "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func deployContracts(client *ethclient.Client) {
+func callContract(client *ethclient.Client) {
+	addr := deployContracts(client)
+	searchContract(addr, client)
+}
+
+func deployContracts(client *ethclient.Client) (contractAddress common.Address) {
 	// 1. get nonce
 	// 2. get gas price
 	// 3. get gas limit
@@ -50,7 +56,7 @@ func deployContracts(client *ethclient.Client) {
 
 	auth := bind.NewKeyedTransactor(privateKey)
 	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0) // in wei
+	auth.Value = big.NewInt(0)      // in wei
 	auth.GasLimit = uint64(3000000) // in units
 	auth.GasPrice = gasPrice
 
@@ -59,6 +65,22 @@ func deployContracts(client *ethclient.Client) {
 		log.Fatalln(err)
 	}
 	fmt.Println("contract address", addr.Hex())
+	contractAddress = addr
+
+	return
 }
 
+func searchContract(addr common.Address, client *ethclient.Client) (contract *Store) {
+	contract, err := NewStore(addr, client)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	version, err := contract.Version(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("contract version: %v\n", version)
+
+	return contract
+}
