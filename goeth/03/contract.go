@@ -15,6 +15,7 @@ import (
 )
 
 var auth *bind.TransactOpts
+var contractAddress common.Address
 
 func callContract(client *ethclient.Client) {
 	privateKey, err := crypto.HexToECDSA("3c6af19adf147b5b2f6111c4015996016f2b3f92aaf0457bff6d053945607e6c")
@@ -48,6 +49,10 @@ func callContract(client *ethclient.Client) {
 	auth.GasPrice = gasPrice
 
 	addr := deployContracts(client)
+	contractAddress = addr
+	
+	go callListenEvent()
+	
 	contract := searchContract(client, addr)
 	callSetItem(client, contract)
 }

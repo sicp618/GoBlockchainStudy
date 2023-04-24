@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -23,6 +24,8 @@ func main() {
 	// readTxInfo(client)
 	// listenNewTx(client)
 	callContract(client)
+
+	time.Sleep(10 * time.Second)
 }
 
 func listenNewTx(client *ethclient.Client) {
