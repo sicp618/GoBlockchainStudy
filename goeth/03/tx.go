@@ -10,7 +10,6 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-
 func main() {
 	host := "http://localhost:7545"
 	// host = "ws://localhost:8545"
@@ -25,7 +24,7 @@ func main() {
 	// listenNewTx(client)
 	callContract(client)
 
-	time.Sleep(10 * time.Second)
+	time.Sleep(5 * time.Second)
 }
 
 func listenNewTx(client *ethclient.Client) {

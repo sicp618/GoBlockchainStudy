@@ -55,6 +55,8 @@ func callContract(client *ethclient.Client) {
 	
 	contract := searchContract(client, addr)
 	callSetItem(client, contract)
+
+	readEvents(client)
 }
 
 func deployContracts(client *ethclient.Client) (contractAddress common.Address) {
