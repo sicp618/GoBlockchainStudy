@@ -59,25 +59,19 @@ func readEvents(client *ethclient.Client) {
 		log.Fatal(err)
 	}
 
+	type Event struct {
+		Key   [32]byte
+		Value [32]byte
+	}
+
 	for _, vLog := range logs {
-		fmt.Println("read log", vLog)
-		// event := struct {
-			// Key [32]byte
-			// Val [32]byte
-		// }{}
-		event := []interface{}{
-			new([32]byte),new([]byte),
-		}
-		data, err := contractAbi.Unpack("ItemSet", vLog.Data)
+		fmt.Println("read log", vLog.Data)
+		var event Event
+		err := contractAbi.UnpackIntoInterface(&event, "ItemSet", vLog.Data)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// json.Unmarshal(data[0], &event)
-		// abi.ConvertType(event, data[0])
-		// abi.ConvertType(data[0], event[0])
-		// bs := abi.ConvertType(data[0], [32]byte)
-		// fmt.Println("event", string([32]byte(bs)), "data", data)
-		fmt.Println("event", event, "data", data)
+		fmt.Println("event", string(event.Key[:]), string(event.Value[:]))
 	}
 }
